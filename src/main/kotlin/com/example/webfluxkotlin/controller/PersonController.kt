@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono
 
 @RestController
 @RequestMapping("/api/people")
+//@CrossOrigin("http://localhost:3000")
 class PersonController{
     @Autowired
     private lateinit var service: PersonService

@@ -6,14 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import org.springframework.web.reactive.config.CorsRegistry
 import org.springframework.web.reactive.config.EnableWebFlux
+import org.springframework.web.reactive.config.WebFluxConfigurer
 import org.springframework.web.reactive.function.server.ServerResponse
 import org.springframework.web.reactive.function.server.router
 
 @Configuration
 @EnableMongoRepositories
 @EnableWebFlux
-class WebConfig {
+class WebConfig : WebFluxConfigurer {
 
     @Autowired
     private lateinit var repository : PersonRepository
@@ -45,5 +47,11 @@ class WebConfig {
             request -> repository.deleteById(request.pathVariable("id"))
                 .flatMap { ServerResponse.noContent().build() }
         }
+    }
+
+    override fun addCorsMappings(registry: CorsRegistry) {
+        registry.addMapping("/**")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedOrigins("http://localhost:3000")
     }
 }
